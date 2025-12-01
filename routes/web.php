@@ -34,10 +34,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| ROUTES MAHASISWA (UI DARI TEMANMU)
-|--------------------------------------------------------------------------
-| Sudah dibikin temanmu, aku bungkus dengan 'role:mahasiswa'
-| supaya aman dan tidak bisa diakses oleh dosen atau admin.
+| ROUTES MAHASISWA 
 |--------------------------------------------------------------------------
 */
 
