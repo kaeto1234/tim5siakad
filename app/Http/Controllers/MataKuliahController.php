@@ -2,64 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MataKuliah;
 use Illuminate\Http\Request;
+use App\Models\MataKuliah;
+use Illuminate\Support\Facades\Auth;
 
 class MataKuliahController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = MataKuliah::all();
+        return view('matakuliah.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        abort_if(Auth::user()->role === 'admin', 403, 'Admin tidak boleh membuat mata kuliah');
+        return view('matakuliah.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        //
+        abort_if(Auth::user()->role === 'admin', 403, 'Admin tidak boleh membuat mata kuliah');
+
+        $r->validate(['nama'=>'required','kode'=>'required']);
+        MataKuliah::create($r->only('nama','kode','sks','deskripsi'));
+        return redirect()->route('matakuliah.index')->with('success','Mata kuliah dibuat');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(MataKuliah $mataKuliah)
+    public function edit($id)
     {
-        //
+        abort_if(Auth::user()->role === 'admin', 403, 'Admin tidak boleh mengubah mata kuliah');
+        $m = MataKuliah::findOrFail($id);
+        return view('matakuliah.edit', compact('m'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MataKuliah $mataKuliah)
+    public function update(Request $r, $id)
     {
-        //
+        abort_if(Auth::user()->role === 'admin', 403, 'Admin tidak boleh mengubah mata kuliah');
+        $m = MataKuliah::findOrFail($id);
+        $r->validate(['nama'=>'required','kode'=>'required']);
+        $m->update($r->only('nama','kode','sks','deskripsi'));
+        return redirect()->route('matakuliah.index')->with('success','Mata kuliah diupdate');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, MataKuliah $mataKuliah)
+    // destroy: admin allowed
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MataKuliah $mataKuliah)
-    {
-        //
+        abort_if(Auth::user()->role !== 'admin', 403, 'Hanya admin yang boleh menghapus mata kuliah');
+        MataKuliah::findOrFail($id)->delete();
+        return back()->with('success','Mata kuliah dihapus');
     }
 }
