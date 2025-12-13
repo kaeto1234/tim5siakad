@@ -10,6 +10,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('admin.kelas.create'); // atau landing page tim kamu
+    return view('admin.kelas.index'); // atau landing page tim kamu
 });
 

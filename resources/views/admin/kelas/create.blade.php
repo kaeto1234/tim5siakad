@@ -3,31 +3,15 @@
 @section('title', 'Tambah Kelas')
 
 @section('content')
-<h4 class="mb-3">Tambah Kelas</h4>
+<h4 class="mb-4">Tambah Kelas</h4>
 
 <form>
-    <div class="mb-2">
-        <label>Kode Kelas</label>
-        <input type="text" class="form-control">
-    </div>
-
-    <div class="mb-2">
-        <label>Nama Kelas</label>
-        <input type="text" class="form-control">
-    </div>
-
-    <div class="mb-2">
-        <label>Semester</label>
-        <input type="number" class="form-control">
-    </div>
-
     <div class="mb-3">
-        <label>Dosen</label>
-        <input type="text" class="form-control">
+        <label class="form-label">Nama Kelas</label>
+        <input type="text" class="form-control" placeholder="Contoh: A">
     </div>
 
     <button class="btn btn-success">Simpan</button>
+    <a href="#" class="btn btn-secondary">Kembali</a>
 </form>
-
-{{-- Mahasiswa nanti punya tambahan select presensi di sini --}}
 @endsection
