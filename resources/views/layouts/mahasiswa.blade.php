@@ -13,10 +13,9 @@
     <aside class="bg-dark text-white p-3" style="width: 250px">
         <h5 class="mb-4">SIAKAD</h5>
         <ul class="nav flex-column gap-2">
-            <li><a href="#" class="nav-link text-white">Dashboard</a></li>
-            <li><a href="#" class="nav-link text-white">Data Kelas</a></li>
-            <li><a href="#" class="nav-link text-white">Tambah Kelas</a></li>
-            <li><a href="#" class="nav-link text-white">Profile</a></li>
+            <li><a href="{{route('mahasiswa.dashboard')}}" class="nav-link text-white">Dashboard</a></li>
+            <li><a href="{{route('mahasiswa.jadwal')}}" class="nav-link text-white">Jadwal</a></li>
+            <li><a href="{{route('mahasiswa.nilai')}}" class="nav-link text-white">Nilai</a></li>
         </ul>
     </aside>
 

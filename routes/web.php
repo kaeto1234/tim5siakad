@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', function () {
+    Route::get('/dashboard_admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
@@ -98,3 +98,27 @@ Route::prefix('admin')->group(function () {
     Route::get('/jadwal/edit', fn () => view('admin.jadwal.edit'))->name('admin.jadwal.edit');
 
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Mahasiswa Routes
+|--------------------------------------------------------------------------
+| Semua route mahasiswa dikelompokkan, rapi, dan konsisten
+*/
+
+
+// Dashboard
+Route::get('/dashboard_mahasiswa', function () {
+    return view('mahasiswa.dashboard');
+})->name('mahasiswa.dashboard');
+
+// jadwal
+Route::get('/jadwal_mahasiswa', function () {
+    return view('mahasiswa.jadwal');
+})->name('mahasiswa.jadwal');
+
+// nilai
+Route::get('/nilai_mahasiswa', function () {
+    return view('mahasiswa.nilai');
+})->name('mahasiswa.nilai');
