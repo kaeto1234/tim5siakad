@@ -30,11 +30,6 @@ class User extends Authenticatable
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELASI USER
-    |--------------------------------------------------------------------------
-    */
 
     // (1) Mahasiswa ↔ Kelas (pivot mahasiswa_kelas)
     public function student()

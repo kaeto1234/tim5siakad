@@ -10,23 +10,34 @@
 <div class="card p-4" style="width: 400px">
     <h4 class="text-center mb-3">Login SIAKAD</h4>
 
-    <form>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('login.process') }}">
+        @csrf
+
         <div class="mb-3">
             <label>Email</label>
-            <input type="email" class="form-control">
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   required>
         </div>
 
         <div class="mb-3">
             <label>Password</label>
-            <input type="password" class="form-control">
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   required>
         </div>
 
         <button class="btn btn-primary w-100">Login</button>
     </form>
 
-    <div class="text-center mt-3">
-        <a href="#">Belum punya akun? Register</a>
-    </div>
 </div>
 
 </body>

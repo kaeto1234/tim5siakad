@@ -18,7 +18,31 @@ use App\Http\Controllers\Student\DashboardController as MahasiswaDashboardContro
 use App\Http\Controllers\Student\ScheduleController as MahasiswaScheduleController;
 use App\Http\Controllers\Student\AttendanceController as MahasiswaAttendanceController;
 use App\Http\Controllers\Student\GradeController as MahasiswaGradeController;
+use App\Http\Controllers\Auth\AuthController;
+
 use Illuminate\Support\Facades\Route;
+
+
+
+
+// LOGIN (semua role)
+Route::get('/auth/login', [AuthController::class, 'showLogin'])
+    ->name('login');
+
+Route::post('/auth/login', [AuthController::class, 'login'])
+    ->name('login.process');
+
+// REGISTER (ADMIN ONLY)
+Route::get('/auth/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::post('/auth/register', [AuthController::class, 'register'])
+    ->name('register.process');
+
+// LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +51,7 @@ use Illuminate\Support\Facades\Route;
 | Semua route admin dikelompokkan, rapi, dan konsisten
 */
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth','role:admin'])->prefix('admin')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', function () {
@@ -269,7 +293,7 @@ Route::prefix('admin')->group(function () {
 |
 */
 
-Route::prefix('dosen')->group(function () {
+Route::middleware(['auth','role:lecturer'])->prefix('dosen')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dosen.dashboard');
@@ -298,7 +322,7 @@ Route::prefix('dosen')->group(function () {
 |
 */
 
-Route::prefix('mahasiswa')->group(function () {
+Route::middleware(['auth','role:student'])->prefix('mahasiswa')->group(function () {
 
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
         ->name('mahasiswa.dashboard');
@@ -307,7 +331,11 @@ Route::prefix('mahasiswa')->group(function () {
         ->name('mahasiswa.jadwal');
 
     Route::get('/presensi', [MahasiswaAttendanceController::class, 'index'])
-        ->name('mahasiswa.presensi');
+        ->name('mahasiswa.presensi.index');
+
+    Route::get('/presensi/rekap', [MahasiswaAttendanceController::class, 'rekap'])
+        ->name('mahasiswa.presensi.rekap');
+
 
     Route::get('/mahasiswa/nilai',[MahasiswaGradeController::class, 'index'])
         ->name('mahasiswa.nilai');

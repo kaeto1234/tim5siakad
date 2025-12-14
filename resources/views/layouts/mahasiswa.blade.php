@@ -24,8 +24,9 @@
             <ul class="nav flex-column gap-2">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                 <li><a href="{{ route('mahasiswa.jadwal') }}" class="nav-link text-white">Jadwal</a></li>
+                <li><a href="{{ route('mahasiswa.presensi.index') }}" class="nav-link text-white">Presensi</a></li>
+                <li><a href="{{ route('mahasiswa.presensi.rekap') }}" class="nav-link text-white">Rekap Presensi</a></li>
                 <li><a href="{{ route('mahasiswa.nilai') }}" class="nav-link text-white">nilai</a></li>
-                <li><a href="{{ route('mahasiswa.presensi') }}" class="nav-link text-white">Presensi</a></li>
             </ul>
         </aside>
 

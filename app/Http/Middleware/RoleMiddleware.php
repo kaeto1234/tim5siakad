@@ -4,22 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     * Usage: ->middleware('role:admin') or ->middleware('role:admin,dosen')
-     */
-    public function handle(Request $request, Closure $next, $roles)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (! $request->user()) {
+        // belum login
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
-        $allowed = explode(',', $roles);
-        if (! in_array($request->user()->role, $allowed)) {
-            abort(403, 'Akses ditolak.');
+        // role tidak sesuai
+        if (! in_array(Auth::user()->role, $roles)) {
+            abort(403, 'Akses ditolak');
         }
 
         return $next($request);
