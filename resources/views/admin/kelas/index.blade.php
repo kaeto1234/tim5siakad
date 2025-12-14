@@ -9,24 +9,59 @@
     <div class="col-md-4 px-0">
         <input type="text" class="form-control" placeholder="Cari kelas...">
     </div>
-    <a href="#" class="btn btn-primary">+ Tambah Kelas</a>
+    <a href="{{ route('admin.kelas.create') }}" class="btn btn-primary">
+        + Tambah Kelas
+    </a>
 </div>
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
 <table class="table table-bordered align-middle">
     <thead class="table-light">
         <tr>
             <th style="width:200px">Nama Kelas</th>
+            <th style="width:160px">Dibuat</th>
+            <th style="width:160px">Diubah</th>
             <th style="width:140px" class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>A</td>
-            <td class="text-center">
-                <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                <button class="btn btn-sm btn-danger">Hapus</button>
-            </td>
-        </tr>
+        @forelse ($classRooms as $classRoom)
+            <tr>
+                <td>{{ $classRoom->name }}</td>
+
+                <td>{{ $classRoom->created_at->format('d M Y H:i') }}</td>
+                <td>{{ $classRoom->updated_at->format('d M Y H:i') }}</td>
+
+                <td class="text-center">
+                    <a href="{{ route('admin.kelas.edit', $classRoom->id) }}"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <form action="{{ route('admin.kelas.destroy', $classRoom->id) }}"
+                          method="POST"
+                          class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Yakin hapus kelas ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    Data kelas belum ada
+                </td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
 @endsection

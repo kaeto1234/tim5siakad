@@ -6,22 +6,32 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('class_semesters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained('classes');
-            $table->foreignId('semester_id')->constrained('semesters');
-            $table->integer('level'); // 1–4
+
+            $table->foreignId('class_room_id')
+                ->constrained('class_rooms')
+                ->cascadeOnDelete();
+
+            $table->foreignId('semester_id')
+                ->constrained('semesters')
+                ->cascadeOnDelete();
+
+            $table->year('batch');        // angkatan (2022, 2023, dst)
+            $table->unsignedTinyInteger('level'); // semester ke (1–8)
+
+            $table->timestamps();
+
+            // 🔒 unik: kelas + semester + angkatan
+            $table->unique(
+                ['class_room_id', 'semester_id', 'batch'],
+                'class_semester_unique'
+            );
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('class_semesters');

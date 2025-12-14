@@ -6,24 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Schedule extends Model
 {
-    public function classSemester() {
+    protected $fillable = [
+        'class_semester_id',
+        'course_id',
+        'lecturer_id',
+        'room_id',
+        'day',
+        'start_time',
+        'end_time',
+    ];
+
+    public function classSemester()
+    {
         return $this->belongsTo(ClassSemester::class);
     }
 
-    public function course() {
+    public function course()
+    {
         return $this->belongsTo(Course::class);
     }
 
-    public function lecturer() {
+    public function lecturer()
+    {
         return $this->belongsTo(Lecturer::class);
     }
 
-    public function meetings() {
-        return $this->hasMany(Meeting::class);
-    }
-
-    public function grades() {
-        return $this->hasMany(Grade::class);
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
     }
 }
-

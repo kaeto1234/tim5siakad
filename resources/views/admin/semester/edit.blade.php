@@ -5,29 +5,29 @@
 @section('content')
 <h4 class="mb-4">Edit Semester</h4>
 
-<form>
-    <div class="mb-3">
-        <label>Nama Semester</label>
-        <select class="form-select">
-            <option selected>Ganjil</option>
-            <option>Genap</option>
-        </select>
-    </div>
+<form action="{{ route('admin.semester.update', $semester->id) }}" method="POST">
+    @csrf
+    @method('PUT')
 
     <div class="mb-3">
-        <label>Tahun Ajaran</label>
-        <input type="text" class="form-control" value="2024/2025">
+        <label>Nama Semester</label>
+        <select name="name" class="form-select">
+            <option value="Ganjil" {{ $semester->name == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
+            <option value="Genap" {{ $semester->name == 'Genap' ? 'selected' : '' }}>Genap</option>
+        </select>
     </div>
 
     <div class="mb-4">
-        <label>Status</label>
-        <select class="form-select">
-            <option value="1" selected>Aktif</option>
-            <option value="0">Tidak Aktif</option>
-        </select>
+        <label>Tahun Ajaran</label>
+        <input type="text"
+               name="academic_year"
+               class="form-control"
+               value="{{ $semester->academic_year }}">
     </div>
 
     <button class="btn btn-primary">Update</button>
-    <a href="#" class="btn btn-secondary">Batal</a>
+    <a href="{{ route('admin.semester.index') }}" class="btn btn-secondary">
+        Batal
+    </a>
 </form>
 @endsection

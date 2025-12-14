@@ -9,28 +9,63 @@
     <div class="col-md-4 px-0">
         <input type="text" class="form-control" placeholder="Cari prodi...">
     </div>
-    <a href="#" class="btn btn-primary">+ Tambah Prodi</a>
+    <a href="{{ route('admin.prodi.create') }}" class="btn btn-primary">
+        + Tambah Prodi
+    </a>
 </div>
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
 <table class="table table-bordered align-middle">
     <thead class="table-light">
         <tr>
-            <th style="width:180px">Kode Prodi</th>
+            <th style="width:160px">Kode Prodi</th>
             <th>Nama Prodi</th>
             <th>Jurusan</th>
+            <th style="width:160px">Dibuat</th>
+            <th style="width:160px">Diubah</th>
             <th style="width:140px" class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>IF</td>
-            <td>Teknik Informatika</td>
-            <td>Teknik</td>
-            <td class="text-center">
-                <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                <button class="btn btn-sm btn-danger">Hapus</button>
-            </td>
-        </tr>
+        @forelse ($studyPrograms as $prodi)
+            <tr>
+                <td>{{ $prodi->code }}</td>
+                <td>{{ $prodi->name }}</td>
+                <td>{{ $prodi->department->name }}</td>
+
+                <td>{{ $prodi->created_at->format('d M Y H:i') }}</td>
+                <td>{{ $prodi->updated_at->format('d M Y H:i') }}</td>
+
+                <td class="text-center">
+                    <a href="{{ route('admin.prodi.edit', $prodi->id) }}"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <form action="{{ route('admin.prodi.destroy', $prodi->id) }}"
+                          method="POST"
+                          class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Yakin hapus prodi ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    Data program studi belum ada
+                </td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
 @endsection

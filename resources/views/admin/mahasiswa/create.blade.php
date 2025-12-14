@@ -5,20 +5,32 @@
 @section('content')
 <h4 class="mb-4">Tambah Mahasiswa</h4>
 
-<form action="{{ route('admin.students.store') }}" method="POST">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<form action="{{ route('admin.mahasiswa.store') }}" method="POST">
     @csrf
 
-    {{-- DATA AKUN --}}
+    {{-- AKUN LOGIN --}}
     <h6 class="mb-3">Akun Login</h6>
 
     <div class="mb-3">
         <label>Email</label>
-        <input type="email" name="email" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control" required>
+        <input type="email"
+               name="email"
+               class="form-control"
+               value="{{ old('email') }}"
+               required>
+        <small class="text-muted">
+            Password otomatis = NIM
+        </small>
     </div>
 
     {{-- DATA MAHASISWA --}}
@@ -26,12 +38,11 @@
 
     <div class="mb-3">
         <label>Nama Mahasiswa</label>
-        <input type="text" name="name" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-        <label>NIM</label>
-        <input type="text" name="student_number" class="form-control" required>
+        <input type="text"
+               name="name"
+               class="form-control"
+               value="{{ old('name') }}"
+               required>
     </div>
 
     <div class="mb-3">
@@ -39,27 +50,27 @@
         <select name="study_program_id" class="form-select" required>
             <option value="">-- Pilih Prodi --</option>
             @foreach ($studyPrograms as $prodi)
-                <option value="{{ $prodi->id }}">{{ $prodi->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label>Kelas</label>
-        <select name="class_room_id" class="form-select" required>
-            <option value="">-- Pilih Kelas --</option>
-            @foreach ($classRooms as $kelas)
-                <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                <option value="{{ $prodi->id }}"
+                    {{ old('study_program_id') == $prodi->id ? 'selected' : '' }}>
+                    {{ $prodi->name }}
+                </option>
             @endforeach
         </select>
     </div>
 
     <div class="mb-4">
         <label>Angkatan</label>
-        <input type="number" name="enrollment_year" class="form-control" placeholder="2023" required>
+        <input type="number"
+               name="enrollment_year"
+               class="form-control"
+               placeholder="2024"
+               value="{{ old('enrollment_year') }}"
+               required>
     </div>
 
     <button class="btn btn-success">Simpan</button>
-    <a href="{{ route('admin.students.index') }}" class="btn btn-secondary">Kembali</a>
+    <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-secondary">
+        Kembali
+    </a>
 </form>
 @endsection

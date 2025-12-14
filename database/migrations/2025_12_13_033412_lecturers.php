@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('lecturer_number')->unique(); // NIDN/NIP
             $table->string('name');
             $table->foreignId('study_program_id')->constrained('study_programs');
+            $table->timestamps();
         });
     }
 

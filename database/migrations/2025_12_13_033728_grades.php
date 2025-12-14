@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('midterm_score')->nullable();
             $table->integer('final_exam_score')->nullable();
             $table->integer('final_score')->nullable();
+            $table->timestamps();
         });
     }
 

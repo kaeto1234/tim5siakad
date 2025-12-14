@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('meeting_number');
             $table->date('date');
             $table->string('topic')->nullable();
+            $table->timestamps();
         });
     }
 

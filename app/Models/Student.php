@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
-        'user_id','student_number','name',
-        'study_program_id','class_id','enrollment_year'
+        'user_id', 'student_number', 'name',
+        'study_program_id', 'class_id', 'enrollment_year',
     ];
 
     public function user()
@@ -34,5 +34,13 @@ class Student extends Model
     public function grades()
     {
         return $this->hasMany(Grade::class);
+    }
+
+    public function classSemesters()
+    {
+        return $this->belongsToMany(
+            ClassSemester::class,
+            'student_class_semesters'
+        );
     }
 }
