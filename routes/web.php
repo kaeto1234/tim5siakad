@@ -1,21 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-
-use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\Admin\DepartmentController;
-use App\Http\Controllers\Admin\StudyProgramController;
 use App\Http\Controllers\Admin\ClassRoomController;
-use App\Http\Controllers\Admin\SemesterController;
-use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ClassSemesterController;
-use App\Http\Controllers\Admin\ScheduleController;
-use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\LecturerController;
-
-
-
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\SemesterController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudyProgramController;
+use App\Http\Controllers\Lecturer\AttendanceController;
+use App\Http\Controllers\Lecturer\DashboardController;
+use App\Http\Controllers\Lecturer\GradeController;
+use App\Http\Controllers\Lecturer\ScheduleController as LecturerScheduleController;
+use App\Http\Controllers\Student\DashboardController as MahasiswaDashboardController;
+use App\Http\Controllers\Student\ScheduleController as MahasiswaScheduleController;
+use App\Http\Controllers\Student\AttendanceController as MahasiswaAttendanceController;
+use App\Http\Controllers\Student\GradeController as MahasiswaGradeController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +30,7 @@ use App\Http\Controllers\Admin\LecturerController;
 Route::prefix('admin')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard_admin', function () {
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
@@ -182,10 +185,10 @@ Route::prefix('admin')->group(function () {
         ->name('admin.mahasiswa.create');
 
     Route::post('/mahasiswa', [StudentController::class, 'store'])
-    ->name('admin.mahasiswa.store');
+        ->name('admin.mahasiswa.store');
 
     Route::delete('/mahasiswa/{student}', [StudentController::class, 'destroy'])
-    ->name('admin.mahasiswa.destroy');
+        ->name('admin.mahasiswa.destroy');
 
     /*
     |--------------------------------------------------------------------------
@@ -239,7 +242,7 @@ Route::prefix('admin')->group(function () {
     | RUANGAN
     |--------------------------------------------------------------------------
     */
-        
+
     Route::get('/ruangan', [RoomController::class, 'index'])
         ->name('admin.ruangan.index');
 
@@ -259,26 +262,53 @@ Route::prefix('admin')->group(function () {
         ->name('admin.ruangan.destroy');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Dosen Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::prefix('dosen')->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dosen.dashboard');
+
+    Route::get('/jadwal', [LecturerScheduleController::class, 'index'])
+        ->name('dosen.jadwal');
+
+    Route::get('/jadwal/{schedule}/presensi', [AttendanceController::class, 'create'])
+        ->name('dosen.presensi.form');
+
+    Route::post('/jadwal/{schedule}/presensi', [AttendanceController::class, 'store'])
+        ->name('dosen.presensi.store');
+
+    Route::get('/dosen/jadwal/{schedule}/nilai', [GradeController::class, 'create'])
+        ->name('dosen.nilai.create');
+
+    Route::post('/dosen/jadwal/{schedule}/nilai', [GradeController::class, 'store'])
+        ->name('dosen.nilai.store');
+
+});
 
 /*
 |--------------------------------------------------------------------------
 | Mahasiswa Routes
 |--------------------------------------------------------------------------
-| Semua route mahasiswa dikelompokkan, rapi, dan konsisten
+|
 */
 
+Route::prefix('mahasiswa')->group(function () {
 
-// Dashboard
-Route::get('/dashboard_mahasiswa', function () {
-    return view('mahasiswa.dashboard');
-})->name('mahasiswa.dashboard');
+    Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])
+        ->name('mahasiswa.dashboard');
 
-// jadwal
-Route::get('/jadwal_mahasiswa', function () {
-    return view('mahasiswa.jadwal');
-})->name('mahasiswa.jadwal');
+    Route::get('/jadwal', [MahasiswaScheduleController::class, 'index'])
+        ->name('mahasiswa.jadwal');
 
-// nilai
-Route::get('/nilai_mahasiswa', function () {
-    return view('mahasiswa.nilai');
-})->name('mahasiswa.nilai');
+    Route::get('/presensi', [MahasiswaAttendanceController::class, 'index'])
+        ->name('mahasiswa.presensi');
+
+    Route::get('/mahasiswa/nilai',[MahasiswaGradeController::class, 'index'])
+        ->name('mahasiswa.nilai');
+});

@@ -1,69 +1,78 @@
-@extends('layouts.app')
+@extends('layouts.mahasiswa')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Mahasiswa')
 
 @section('content')
-<h4 class="mb-4">Profil Mahasiswa</h4>
+<h4 class="mb-4">Dashboard Mahasiswa</h4>
 
-<div class="row">
-    {{-- Info Utama --}}
-    <div class="col-md-8">
-        <div class="card mb-3">
-            <div class="card-header">
-                Informasi Mahasiswa
-            </div>
+{{-- PROFIL --}}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5>{{ $student->name }}</h5>
+        <small class="text-muted">
+            NIM: {{ $student->student_number }} <br>
+            Prodi: {{ $student->studyProgram->name }} <br>
+            Kelas:
+            {{ $classSemester->level ?? '-' }}
+            {{ $classSemester->classRoom->name ?? '-' }}
+        </small>
+    </div>
+</div>
+
+{{-- STAT --}}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
             <div class="card-body">
-                <table class="table table-borderless mb-0">
-                    <tr>
-                        <th style="width: 200px">NIM</th>
-                        <td>: {{ $user->nim }}</td>
-                    </tr>
-                    <tr>
-                        <th>Nama</th>
-                        <td>: {{ $user->nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Prodi ID</th>
-                        <td>: {{ $user->prodi_id }}</td>
-                    </tr>
-                    <tr>
-                        <th>Angkatan</th>
-                        <td>: {{ $user->angkatan }}</td>
-                    </tr>
-                </table>
+                <h4>{{ $total }}</h4>
+                <small>Total Pertemuan</small>
             </div>
-        </div>
-
-        {{-- Catatan --}}
-        <div class="alert alert-secondary">
-            <small>
-                Data mahasiswa digunakan untuk keperluan akademik dan administrasi.
-            </small>
         </div>
     </div>
 
-    {{-- Sidebar Profil --}}
-    <div class="col-md-4">
-        <div class="card text-center">
+    <div class="col-md-3">
+        <div class="card text-center text-success">
             <div class="card-body">
-                <img src="https://via.placeholder.com/120"
-                     class="rounded-circle mb-3"
-                     alt="Foto Profil">
-
-                <h5 class="mb-0">{{ $user->nama }}</h5>
-                <small class="text-muted">Mahasiswa</small>
-
-                <hr>
-
-                <button class="btn btn-outline-primary btn-sm w-100 mb-2">
-                    Edit Profil
-                </button>
-
-                <button class="btn btn-outline-secondary btn-sm w-100">
-                    Ganti Password
-                </button>
+                <h4>{{ $present }}</h4>
+                <small>Hadir</small>
             </div>
         </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center text-warning">
+            <div class="card-body">
+                <h4>{{ $excused }}</h4>
+                <small>Izin</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center text-danger">
+            <div class="card-body">
+                <h4>{{ $absent }}</h4>
+                <small>Alfa</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- STATUS --}}
+<div class="card">
+    <div class="card-body">
+        <h5>Persentase Kehadiran</h5>
+        <h3>{{ $percentage }}%</h3>
+
+        @if ($percentage >= 75)
+            <span class="badge bg-success">
+                Memenuhi syarat UAS
+            </span>
+        @else
+            <span class="badge bg-danger">
+                Tidak memenuhi syarat UAS
+            </span>
+        @endif
     </div>
 </div>
 @endsection

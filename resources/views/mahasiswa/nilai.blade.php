@@ -1,34 +1,36 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'Nilai Mahasiswa')
+@section('title', 'Nilai')
 
 @section('content')
 <h4 class="mb-4">Nilai Mahasiswa</h4>
 
-<table class="table table-bordered align-middle">
+<table class="table table-bordered">
     <thead class="table-light">
         <tr>
-            <th>Id</th>
-            <th>Mahasiswa_Id</th>
-            <th>Jadwal_Id</th>
-            <th>Nilai_Tugas</th>
-            <th>Nilai_Uts</th>
-            <th>Nilai_Uas</th>
-            <th>Nilai_Akhir</th>
-            <th style="width:120px" class="text-center">Action</th>
+            <th>Mata Kuliah</th>
+            <th>Tugas</th>
+            <th>UTS</th>
+            <th>UAS</th>
+            <th>Nilai Akhir</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>2023001</td>
-            <td>JDW001</td>
-            <td>80</td>
-            <td>85</td>
-            <td>90</td>
-            <td>87</td>
-            </td>
-        </tr>
+        @forelse ($grades as $grade)
+            <tr>
+                <td>{{ $grade->schedule->course->name }}</td>
+                <td>{{ $grade->assignment_score ?? '-' }}</td>
+                <td>{{ $grade->midterm_score ?? '-' }}</td>
+                <td>{{ $grade->final_exam_score ?? '-' }}</td>
+                <td><b>{{ $grade->final_score ?? '-' }}</b></td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    Nilai belum tersedia
+                </td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
 @endsection

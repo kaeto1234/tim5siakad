@@ -6,12 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
 {
-    public function schedule() {
+    protected $fillable = [
+        'schedule_id',
+        'meeting_number',
+        'date',
+        'topic',
+    ];
+
+    public function schedule()
+    {
         return $this->belongsTo(Schedule::class);
     }
 
-    public function attendances() {
+    public function attendances()
+    {
         return $this->hasMany(Attendance::class);
     }
 }
-
