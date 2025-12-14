@@ -11,23 +11,28 @@ class Student extends Model
         'study_program_id','class_id','enrollment_year'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function studyProgram() {
+    public function studyProgram()
+    {
         return $this->belongsTo(StudyProgram::class);
     }
 
-    public function classRoom() {
-        return $this->belongsTo(ClassRoom::class, 'class_id');
+    public function classRoom()
+    {
+        return $this->belongsTo(ClassRoom::class);
     }
 
-    public function grades() {
-        return $this->hasMany(Grade::class);
-    }
-
-    public function attendances() {
+    public function attendances()
+    {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
     }
 }

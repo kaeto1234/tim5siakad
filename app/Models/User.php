@@ -37,20 +37,14 @@ class User extends Authenticatable
     */
 
     // (1) Mahasiswa ↔ Kelas (pivot mahasiswa_kelas)
-    public function kelas()
+    public function student()
     {
-        return $this->belongsToMany(Kelas::class, 'mahasiswa_kelas', 'mahasiswa_id', 'kelas_id');
+        return $this->hasOne(Student::class);
     }
 
-    // (2) Dosen ↔ Mata Kuliah (pivot dosen_matakuliah)
-    public function matakuliahDosen()
+    // User → Lecturer (jika role = lecturer)
+    public function lecturer()
     {
-        return $this->belongsToMany(MataKuliah::class, 'dosen_matakuliah', 'dosen_id', 'mata_kuliah_id');
-    }
-
-    // (3) Dosen mengampu banyak jadwal
-    public function jadwal()
-    {
-        return $this->hasMany(Jadwal::class, 'dosen_id');
+        return $this->hasOne(Lecturer::class);
     }
 }

@@ -10,15 +10,18 @@ class Lecturer extends Model
         'user_id','lecturer_number','name','study_program_id'
     ];
 
-    public function user() {
+       public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function studyProgram() {
+    public function studyProgram()
+    {
         return $this->belongsTo(StudyProgram::class);
     }
 
-    public function schedules() {
+    public function schedules()
+    {
         return $this->hasMany(Schedule::class);
     }
 }

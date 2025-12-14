@@ -9,7 +9,9 @@
     <div class="col-md-4 px-0">
         <input type="text" class="form-control" placeholder="Cari mahasiswa...">
     </div>
-    <a href="#" class="btn btn-primary">+ Tambah Mahasiswa</a>
+    <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
+        + Tambah Mahasiswa
+    </a>
 </div>
 
 <table class="table table-bordered align-middle">
@@ -23,13 +25,15 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($students as $student)
         <tr>
-            <td>231011001</td>
-            <td>Andi Pratama</td>
-            <td>Teknik Informatika</td>
-            <td>A</td>
-            <td>2023</td>
+            <td>{{ $student->student_number }}</td>
+            <td>{{ $student->name }}</td>
+            <td>{{ $student->studyProgram->name }}</td>
+            <td>{{ $student->classRoom->name }}</td>
+            <td>{{ $student->enrollment_year }}</td>
         </tr>
+        @endforeach
     </tbody>
 </table>
 @endsection
