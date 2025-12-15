@@ -3,35 +3,36 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
-use App\Models\Attendance;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $student = Student::with([
+        $student = Auth::user()->student;
+
+        if (! $student) {
+            abort(403, 'Akun ini bukan mahasiswa');
+        }
+
+        $student->load([
             'studyProgram',
             'classSemesters.classRoom',
             'classSemesters.semester',
-        ])->first();
+        ]);
 
-        if (! $student) {
-            abort(404);
-        }
+        $classSemester = $student->classSemesters()
+            ->latest('student_class_semesters.created_at')
+            ->first();
 
-        $classSemester = $student->classSemesters()->latest()->first();
-
-        $attendances = Attendance::where('student_id', $student->id)->get();
+        $attendances = \App\Models\Attendance::where('student_id', $student->id)->get();
 
         $total = $attendances->count();
         $present = $attendances->where('status', 'present')->count();
         $excused = $attendances->where('status', 'excused')->count();
         $absent = $attendances->where('status', 'absent')->count();
 
-        $percentage = $total
-            ? round(($present / $total) * 100, 2)
-            : 0;
+        $percentage = $total ? round(($present / $total) * 100, 2) : 0;
 
         return view('mahasiswa.dashboard', compact(
             'student',
@@ -44,4 +45,3 @@ class DashboardController extends Controller
         ));
     }
 }
-

@@ -11,48 +11,23 @@ use Illuminate\Http\Request;
 class AttendanceController extends Controller
 {
     /**
-     * FORM PRESENSI
-     * - Jika belum ada → create
-     * - Jika sudah ada → edit
+     * FORM PRESENSI (PERTEMUAN BARU)
      */
     public function create(Schedule $schedule)
     {
-        $classSemester = $schedule->classSemester;
-
-        // ambil meeting terakhir untuk jadwal ini
-        $meeting = Meeting::where('schedule_id', $schedule->id)
-            ->latest('meeting_number')
-            ->first();
-
-        // JIKA SUDAH ADA PRESENSI → MODE EDIT
-        if ($meeting) {
-            $attendances = Attendance::with('student')
-                ->where('meeting_id', $meeting->id)
-                ->get();
-
-            return view('dosen.presensi.form', [
-                'mode'       => 'edit',
-                'schedule'   => $schedule,
-                'meeting'    => $meeting,
-                'attendances'=> $attendances,
-            ]);
-        }
-
-        // JIKA BELUM ADA → MODE CREATE
-        $students = $classSemester->students()
+        $students = $schedule->classSemester
+            ->students()
             ->orderBy('name')
             ->get();
 
         return view('dosen.presensi.form', [
-            'mode'     => 'create',
             'schedule' => $schedule,
             'students' => $students,
         ]);
     }
 
     /**
-     * SIMPAN PRESENSI
-     * - Create meeting baru ATAU update yang lama
+     * SIMPAN PRESENSI (SELALU MEETING BARU)
      */
     public function store(Request $request, Schedule $schedule)
     {
@@ -61,38 +36,44 @@ class AttendanceController extends Controller
             'attendance' => 'required|array',
         ]);
 
-        // cek meeting terakhir
-        $meeting = Meeting::where('schedule_id', $schedule->id)
-            ->latest('meeting_number')
-            ->first();
+        // hitung pertemuan ke-
+        $meetingNumber = Meeting::where('schedule_id', $schedule->id)->count() + 1;
 
-        // JIKA BELUM ADA MEETING → BUAT BARU
-        if (! $meeting) {
-            $meetingNumber = Meeting::where('schedule_id', $schedule->id)->count() + 1;
+        // buat meeting baru
+        $meeting = Meeting::create([
+            'schedule_id'    => $schedule->id,
+            'meeting_number' => $meetingNumber,
+            'date'           => $request->date,
+            'topic'          => $request->topic,
+        ]);
 
-            $meeting = Meeting::create([
-                'schedule_id'    => $schedule->id,
-                'meeting_number' => $meetingNumber,
-                'date'           => $request->date,
-                'topic'          => $request->topic,
-            ]);
-        }
-
-        // SIMPAN / UPDATE PRESENSI
+        // simpan presensi
         foreach ($request->attendance as $studentId => $status) {
-            Attendance::updateOrCreate(
-                [
-                    'meeting_id' => $meeting->id,
-                    'student_id' => $studentId,
-                ],
-                [
-                    'status' => $status, // present | excused | absent
-                ]
-            );
+            Attendance::create([
+                'meeting_id' => $meeting->id,
+                'student_id' => $studentId,
+                'status'     => $status, // present | excused | absent
+            ]);
         }
 
         return redirect()
             ->route('dosen.jadwal')
-            ->with('success', 'Presensi berhasil disimpan');
+            ->with('success', "Presensi pertemuan ke-{$meetingNumber} berhasil disimpan");
+    }
+
+    /**
+     * UPDATE STATUS PRESENSI (TELAT / REVISI)
+     */
+    public function update(Request $request, Attendance $attendance)
+    {
+        $request->validate([
+            'status' => 'required|in:present,excused,absent',
+        ]);
+
+        $attendance->update([
+            'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'Status presensi berhasil diperbarui');
     }
 }

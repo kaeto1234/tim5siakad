@@ -3,20 +3,28 @@
 namespace App\Http\Controllers\Lecturer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lecturer;
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
     public function index()
     {
-        // MODE SEMENTARA (tanpa login)
-        $lecturer = Lecturer::first();
+        // 🔐 ambil user login
+        $user = Auth::user();
 
-        if (! $lecturer) {
-            abort(404, 'Data dosen belum ada');
+        if (! $user) {
+            abort(403, 'Belum login');
         }
 
+        // 🔹 ambil data dosen dari user
+        $lecturer = $user->lecturer;
+
+        if (! $lecturer) {
+            abort(404, 'Data dosen belum terhubung dengan akun');
+        }
+
+        // 🔹 ambil jadwal dosen ini saja
         $schedules = Schedule::with([
                 'classSemester.classRoom',
                 'classSemester.semester',
@@ -28,6 +36,9 @@ class ScheduleController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('dosen.jadwal', compact('lecturer', 'schedules'));
+        return view('dosen.jadwal', compact(
+            'lecturer',
+            'schedules'
+        ));
     }
 }

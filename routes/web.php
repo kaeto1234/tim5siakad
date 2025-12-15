@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ClassRoomController;
 use App\Http\Controllers\Admin\ClassSemesterController;
 use App\Http\Controllers\Admin\CourseController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudyProgramController;
+use App\Http\Controllers\Admin\AcademicReportController;
 use App\Http\Controllers\Lecturer\AttendanceController;
 use App\Http\Controllers\Lecturer\DashboardController;
 use App\Http\Controllers\Lecturer\GradeController;
@@ -18,6 +20,9 @@ use App\Http\Controllers\Student\DashboardController as MahasiswaDashboardContro
 use App\Http\Controllers\Student\ScheduleController as MahasiswaScheduleController;
 use App\Http\Controllers\Student\AttendanceController as MahasiswaAttendanceController;
 use App\Http\Controllers\Student\GradeController as MahasiswaGradeController;
+use App\Http\Controllers\Student\KrsController;
+use App\Http\Controllers\Student\KhsController;
+use App\Http\Controllers\Student\TranscriptController;
 use App\Http\Controllers\Auth\AuthController;
 
 use Illuminate\Support\Facades\Route;
@@ -54,9 +59,9 @@ Route::post('/logout', [AuthController::class, 'logout'])
 Route::middleware(['auth','role:admin'])->prefix('admin')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('admin.dashboard');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -284,6 +289,16 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->group(function () {
 
     Route::delete('/ruangan/{room}', [RoomController::class, 'destroy'])
         ->name('admin.ruangan.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/laporan-akademik', [AcademicReportController::class, 'index'])
+        ->name('admin.laporan.akademik');
+
 });
 
 /*
@@ -307,10 +322,10 @@ Route::middleware(['auth','role:lecturer'])->prefix('dosen')->group(function () 
     Route::post('/jadwal/{schedule}/presensi', [AttendanceController::class, 'store'])
         ->name('dosen.presensi.store');
 
-    Route::get('/dosen/jadwal/{schedule}/nilai', [GradeController::class, 'create'])
+    Route::get('/jadwal/{schedule}/nilai', [GradeController::class, 'create'])
         ->name('dosen.nilai.create');
 
-    Route::post('/dosen/jadwal/{schedule}/nilai', [GradeController::class, 'store'])
+    Route::post('/jadwal/{schedule}/nilai', [GradeController::class, 'store'])
         ->name('dosen.nilai.store');
 
 });
@@ -339,4 +354,13 @@ Route::middleware(['auth','role:student'])->prefix('mahasiswa')->group(function 
 
     Route::get('/mahasiswa/nilai',[MahasiswaGradeController::class, 'index'])
         ->name('mahasiswa.nilai');
+
+    Route::get('/krs', [KrsController::class, 'index'])
+        ->name('mahasiswa.krs');
+
+    Route::get('/khs', [KhsController::class, 'index'])
+        ->name('mahasiswa.khs');
+
+    Route::get('/transkrip', [TranscriptController::class, 'index'])
+    ->name('mahasiswa.transkrip');
 });

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('student_number')->unique(); // NIM
             $table->string('name');
             $table->foreignId('study_program_id')->constrained('study_programs');
-            $table->foreignId('class_id')->constrained('class_rooms');
             $table->string('enrollment_year');
             $table->timestamps();
         });

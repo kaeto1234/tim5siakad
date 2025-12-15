@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Grade;
-use App\Models\Student;
+use Illuminate\Support\Facades\Auth;
 
 class GradeController extends Controller
 {
     public function index()
     {
-        // MODE SEMENTARA TANPA LOGIN
-        $student = Student::first();
+        $student = Auth::user()->student;
+
+        if (! $student) {
+            abort(403, 'Akun ini bukan mahasiswa');
+        }
 
         $grades = Grade::with('schedule.course')
             ->where('student_id', $student->id)

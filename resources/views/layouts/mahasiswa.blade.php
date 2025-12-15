@@ -25,8 +25,11 @@
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                 <li><a href="{{ route('mahasiswa.jadwal') }}" class="nav-link text-white">Jadwal</a></li>
                 <li><a href="{{ route('mahasiswa.presensi.index') }}" class="nav-link text-white">Presensi</a></li>
-                <li><a href="{{ route('mahasiswa.presensi.rekap') }}" class="nav-link text-white">Rekap Presensi</a></li>
-                <li><a href="{{ route('mahasiswa.nilai') }}" class="nav-link text-white">nilai</a></li>
+                <li><a href="{{ route('mahasiswa.presensi.rekap') }}" class="nav-link text-white">Rekap Presensi</a>
+                <li><a href="{{ route('mahasiswa.krs') }}" class="nav-link text-white">KRS</a></li>
+                <li><a href="{{ route('mahasiswa.khs') }}" class="nav-link text-white">KHS</a></li>
+                <li><a href="{{ route('mahasiswa.nilai') }}" class="nav-link text-white">Nilai</a></li>
+                <li><a href="{{ route('mahasiswa.transkrip') }}" class="nav-link text-white">Tanskrip Nilai</a></li>
             </ul>
         </aside>
 
@@ -37,7 +40,12 @@
                 <span class="navbar-text">
                     Admin Akademik
                 </span>
-                <a href="#" class="btn btn-outline-danger btn-sm">Logout</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-danger btn-sm">
+                        Logout
+                    </button>
+                </form>
             </nav>
 
             {{-- Content --}}

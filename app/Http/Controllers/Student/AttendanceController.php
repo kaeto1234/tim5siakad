@@ -4,17 +4,24 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Schedule;
-use App\Models\Student;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
+    /**
+     * LIST PRESENSI DETAIL (per pertemuan)
+     */
     public function index()
     {
-        $student = Student::first();
+        $student = Auth::user()->student;
+
+        if (! $student) {
+            abort(403, 'Akun ini bukan mahasiswa');
+        }
 
         $attendances = \App\Models\Attendance::with([
-            'meeting.schedule.course',
-        ])
+                'meeting.schedule.course',
+            ])
             ->where('student_id', $student->id)
             ->orderByDesc('meeting_id')
             ->get();
@@ -25,28 +32,31 @@ class AttendanceController extends Controller
         ));
     }
 
+    /**
+     * REKAP PRESENSI (persentase)
+     */
     public function rekap()
     {
-        // MODE SEMENTARA (tanpa login)
-        $student = Student::first();
+        $student = Auth::user()->student;
 
         if (! $student) {
-            abort(404, 'Data mahasiswa tidak ditemukan');
+            abort(403, 'Akun ini bukan mahasiswa');
         }
 
-        // ambil kelas semester TERAKHIR mahasiswa
+        // ambil kelas semester TERAKHIR
         $classSemester = $student->classSemesters()
             ->orderBy('student_class_semesters.created_at', 'desc')
             ->first();
 
         if (! $classSemester) {
             return view('mahasiswa.presensi.rekap', [
-                'rekap' => [],
-                'error' => 'Mahasiswa belum terdaftar di kelas semester manapun',
+                'student' => $student,
+                'rekap'   => [],
+                'error'   => 'Mahasiswa belum terdaftar di kelas semester manapun',
             ]);
         }
 
-        // ambil semua jadwal di kelas tersebut
+        // ambil semua jadwal di kelas tsb
         $schedules = Schedule::with([
             'course',
             'meetings.attendances' => function ($q) use ($student) {
@@ -73,11 +83,11 @@ class AttendanceController extends Controller
             $percentage = round(($presentCount / $totalMeetings) * 100, 1);
 
             $rekap[] = [
-                'course' => $schedule->course->name,
-                'present' => $presentCount,
-                'total' => $totalMeetings,
+                'course'     => $schedule->course->name,
+                'present'    => $presentCount,
+                'total'      => $totalMeetings,
                 'percentage' => $percentage,
-                'status' => $percentage >= 75
+                'status'     => $percentage >= 75
                                 ? 'Memenuhi'
                                 : 'Tidak Memenuhi',
             ];

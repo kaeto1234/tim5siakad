@@ -10,18 +10,15 @@ use Illuminate\Http\Request;
 class GradeController extends Controller
 {
     /**
-     * FORM INPUT NILAI
+     * FORM INPUT / EDIT NILAI
      */
     public function create(Schedule $schedule)
     {
-        $classSemester = $schedule->classSemester;
-
-        // mahasiswa di kelas tsb
-        $students = $classSemester->students()
+        $students = $schedule->classSemester
+            ->students()
             ->orderBy('name')
             ->get();
 
-        // nilai yang sudah ada (kalau edit)
         $grades = Grade::where('schedule_id', $schedule->id)
             ->get()
             ->keyBy('student_id');
@@ -44,11 +41,10 @@ class GradeController extends Controller
 
         foreach ($request->grades as $studentId => $data) {
 
-            $assignment = $data['assignment'] ?? 0;
-            $midterm    = $data['midterm'] ?? 0;
-            $finalExam  = $data['final_exam'] ?? 0;
+            $assignment = min(100, max(0, $data['assignment'] ?? 0));
+            $midterm    = min(100, max(0, $data['midterm'] ?? 0));
+            $finalExam  = min(100, max(0, $data['final_exam'] ?? 0));
 
-            // hitung nilai akhir
             $finalScore = round(
                 ($assignment * 0.3) +
                 ($midterm * 0.3) +
@@ -56,7 +52,6 @@ class GradeController extends Controller
                 2
             );
 
-            // tentukan huruf
             $letter = match (true) {
                 $finalScore >= 85 => 'A',
                 $finalScore >= 75 => 'B',

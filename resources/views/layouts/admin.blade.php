@@ -91,6 +91,11 @@
                         Jadwal
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.laporan.akademik') }}" class="nav-link text-white">
+                        Laporan Akademik
+                    </a>
+                </li>
 
 
             </ul>
@@ -103,7 +108,12 @@
                 <span class="navbar-text">
                     Admin Akademik
                 </span>
-                <a href="#" class="btn btn-outline-danger btn-sm">Logout</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-danger btn-sm">
+                        Logout
+                    </button>
+                </form>
             </nav>
 
             {{-- Content --}}

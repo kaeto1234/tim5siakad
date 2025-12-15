@@ -24,7 +24,6 @@
             <ul class="nav flex-column gap-2">
                 <li><a href="{{ route('dosen.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                 <li><a href="{{ route('dosen.jadwal') }}" class="nav-link text-white">Data Jadwal</a></li>
-                <li><a href="#" class="nav-link text-white">Profile</a></li>
             </ul>
         </aside>
 
@@ -35,7 +34,12 @@
                 <span class="navbar-text">
                     Dosen Akademik
                 </span>
-                <a href="#" class="btn btn-outline-danger btn-sm">Logout</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-danger btn-sm">
+                        Logout
+                    </button>
+                </form>
             </nav>
 
             {{-- Content --}}

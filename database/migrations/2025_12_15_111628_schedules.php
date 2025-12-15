@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_semester_id')->constrained('class_semesters');
-            $table->foreignId('course_id')->constrained('courses');
-            $table->foreignId('lecturer_id')->constrained('lecturers');
+            $table->foreignId('class_semester_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('lecturer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('room_id')->constrained()->cascadeOnDelete();
             $table->string('day');
             $table->time('start_time');
             $table->time('end_time');
-            $table->string('room');
             $table->timestamps();
         });
     }

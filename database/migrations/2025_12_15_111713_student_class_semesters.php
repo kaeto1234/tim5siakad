@@ -22,7 +22,6 @@ return new class extends Migration
                 'student_class_unique'
             );
         });
-
     }
 
     /**

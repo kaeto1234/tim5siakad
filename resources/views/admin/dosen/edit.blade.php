@@ -19,13 +19,16 @@
             <input type="text" name="name" class="form-control" value="{{ $lecturer->name }}">
         </div>
 
-        <select name="study_program_id" class="form-select">
-            @foreach ($studyPrograms as $prodi)
-                <option value="{{ $prodi->id }}" {{ $lecturer->study_program_id == $prodi->id ? 'selected' : '' }}>
-                    {{ $prodi->name }}
-                </option>
-            @endforeach
-        </select>
+        <div class="mb-4">
+            <label>Program Studi</label>
+            <select name="study_program_id" class="form-select">
+                @foreach ($studyPrograms as $prodi)
+                    <option value="{{ $prodi->id }}" {{ $lecturer->study_program_id == $prodi->id ? 'selected' : '' }}>
+                        {{ $prodi->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
 
         <button class="btn btn-primary">Update</button>
