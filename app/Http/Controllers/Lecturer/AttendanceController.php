@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class AttendanceController extends Controller
 {
     /**
-     * FORM PRESENSI (PERTEMUAN BARU)
+     * FORM PRESENSI (SELALU PERTEMUAN BARU)
      */
     public function create(Schedule $schedule)
     {
@@ -20,14 +20,14 @@ class AttendanceController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('dosen.presensi.form', [
-            'schedule' => $schedule,
-            'students' => $students,
-        ]);
+        return view('dosen.presensi.form', compact(
+            'schedule',
+            'students'
+        ));
     }
 
     /**
-     * SIMPAN PRESENSI (SELALU MEETING BARU)
+     * SIMPAN PRESENSI (PERTEMUAN BARU)
      */
     public function store(Request $request, Schedule $schedule)
     {
@@ -47,7 +47,7 @@ class AttendanceController extends Controller
             'topic'          => $request->topic,
         ]);
 
-        // simpan presensi
+        // simpan presensi mahasiswa
         foreach ($request->attendance as $studentId => $status) {
             Attendance::create([
                 'meeting_id' => $meeting->id,
@@ -59,21 +59,5 @@ class AttendanceController extends Controller
         return redirect()
             ->route('dosen.jadwal')
             ->with('success', "Presensi pertemuan ke-{$meetingNumber} berhasil disimpan");
-    }
-
-    /**
-     * UPDATE STATUS PRESENSI (TELAT / REVISI)
-     */
-    public function update(Request $request, Attendance $attendance)
-    {
-        $request->validate([
-            'status' => 'required|in:present,excused,absent',
-        ]);
-
-        $attendance->update([
-            'status' => $request->status,
-        ]);
-
-        return back()->with('success', 'Status presensi berhasil diperbarui');
     }
 }
